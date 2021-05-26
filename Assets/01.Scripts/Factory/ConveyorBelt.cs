@@ -4,15 +4,12 @@ using UnityEngine;
 
 public class ConveyorBelt : PlacedObj
 {
-
     private Vector2Int prevPosition;
     private Vector2Int gridPosition;
     private Vector2Int nextPosition;
     public PlacedObj nextPlacedObject;
     [SerializeField]
     private Item item = null;
-
-    private float passItemTime = 0;
     public bool isEmpty()
     {
         if (item == null)
@@ -36,36 +33,27 @@ public class ConveyorBelt : PlacedObj
         nextPlacedObject = GridBuildingSystem.Instance.GetGridObj(nextPosition).GetPlacedObj();
     }
 
-    private void Update()
+    protected override void Routine()
     {
-        passItemTime += Time.deltaTime;
-        if (passItemTime >= 1)
+        //PlacedObj prevPlacedObject = GridBuildingSystem.Instance.GetGridObj(prevPosition).GetPlacedObj();
+        nextPlacedObject = GridBuildingSystem.Instance.GetGridObj(nextPosition).GetPlacedObj();
+
+        if (nextPlacedObject != null)
         {
-            passItemTime = 0;
+            var conveyotBelt = nextPlacedObject as ConveyorBelt;
+            var craftingMachine = nextPlacedObject as CraftingMachine;
 
-            //PlacedObj prevPlacedObject = GridBuildingSystem.Instance.GetGridObj(prevPosition).GetPlacedObj();
-            nextPlacedObject = GridBuildingSystem.Instance.GetGridObj(nextPosition).GetPlacedObj();
-
-            if(nextPlacedObject != null)
+            if (conveyotBelt != null && conveyotBelt.isEmpty() && !isEmpty())
             {
-                var conveyotBelt = nextPlacedObject as ConveyorBelt;
-                var craftingMachine = nextPlacedObject as CraftingMachine;
-
-                if (conveyotBelt != null && conveyotBelt.isEmpty()&& !isEmpty())
-                {
-                    //Debug.Log("다음께 비었어요" + nextPlacedObject.gameObject.GetComponent<ConveyorBelt>().ToString());
-                    conveyotBelt.SetItem(item);
-                    item = null;
-                }
-                else if (craftingMachine != null && !craftingMachine.isFull()&& !isEmpty())
-                {
-                    craftingMachine.AddItem(item);
-                    item = null;
-                }
+                //Debug.Log("다음께 비었어요" + nextPlacedObject.gameObject.GetComponent<ConveyorBelt>().ToString());
+                conveyotBelt.SetItem(item);
+                item = null;
             }
-           
-
+            else if (craftingMachine != null && !craftingMachine.isFull() && !isEmpty())
+            {
+                craftingMachine.AddItem(item);
+                item = null;
+            }
         }
-
     }
 }

@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cb00d85e6233bc34ebb7b15c69ebee0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gold: {fileID: 11400000, guid: 8e123bb4c00ee99438f3eafa24972cf5, type: 2}
+  itemStorageLimit: 10
+  minedItemType: 1
 --- !u!1001 &3611278138717665417
 PrefabInstance:
   m_ObjectHideFlags: 0

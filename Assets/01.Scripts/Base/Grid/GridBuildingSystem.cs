@@ -88,7 +88,17 @@ public class GridBuildingSystem : MonoBehaviour
                 Debug.Log("Cannot Build Here!");
             }
         }
+        if(Input.GetMouseButtonDown(1))
+        {
+            grid.GetXZ(GetMouseWorldPosition(), out int x, out int z);
 
+            List<Vector2Int> gridPositionList = placedObjType.GetGridPositionList(new Vector2Int(x, z), dir);
+
+            foreach (Vector2Int gridPosition in gridPositionList)
+            {
+                grid.GetGridObj(gridPosition.x, gridPosition.y).RemovePlacedObject();
+            }
+        }
         if (Input.GetKeyDown(KeyCode.R)) { dir = PlacedObjType.GetNextDir(dir); }
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) placedObjType = placedObjs[0];
@@ -96,6 +106,8 @@ public class GridBuildingSystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha3)) placedObjType = placedObjs[2];
         if (Input.GetKeyDown(KeyCode.Alpha4)) placedObjType = placedObjs[3];
         if (Input.GetKeyDown(KeyCode.Alpha5)) placedObjType = placedObjs[4];
+        if (Input.GetKeyDown(KeyCode.Alpha6)) placedObjType = placedObjs[5];
+        if (Input.GetKeyDown(KeyCode.Alpha7)) placedObjType = placedObjs[6];
     }
     public GridObject GetGridObj(Vector2Int gridPosition)
     {
@@ -139,6 +151,10 @@ public class GridBuildingSystem : MonoBehaviour
         public void SetPlacedObject(PlacedObj placedObj)
         {
             this.placedObj = placedObj;
+        }
+        public void RemovePlacedObject()
+        {
+            this.placedObj = null;
         }
         public PlacedObj GetPlacedObj()
         {

@@ -4,35 +4,26 @@ using UnityEngine;
 
 public class MiningMachine : PlacedObj
 {
-    private float miningTime = 0;
-    // Start is called before the first frame update
-
     private int minedItemListLimit = 10;
- 
+    [SerializeField] private Item.eItemType minedItemType = Item.eItemType.GOLD;
 
-    // Update is called once per frame
-    void Update()
+    protected override void Routine()
     {
-        miningTime += Time.deltaTime;
-        if (miningTime >= 1)
+        foreach (Vector2Int gridPosition in gridPositionList)
         {
-            miningTime = 0;
+            PlacedObj placedObject = GridBuildingSystem.Instance.GetGridObj(gridPosition).GetPlacedObj();
 
-            foreach (Vector2Int gridPosition in gridPositionList)
+            var mineAbleObj = placedObject as IMineAble;
+
+
+            if (mineAbleObj != null)
             {
-                PlacedObj placedObject = GridBuildingSystem.Instance.GetGridObj(gridPosition).GetPlacedObj();
-
-                var mineAbleObj = placedObject as IMineAble;
-
-                
-                if (mineAbleObj != null)
-                {
-                    if (itemStorage.Count >= minedItemListLimit) return;
+                if (itemStorage.Count >= minedItemListLimit) return;
+                if (mineAbleObj.MinedItemType == minedItemType)
                     itemStorage.Enqueue(mineAbleObj.GetMinedItem());
-                }
-
-                LoadBelt(placedObject);
             }
+
+            LoadBelt(placedObject);
         }
     }
 }

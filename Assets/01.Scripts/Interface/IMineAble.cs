@@ -4,5 +4,6 @@ using UnityEngine;
 
 interface IMineAble
 {
+   Item.eItemType MinedItemType { get; set; }
    Item GetMinedItem();
 }

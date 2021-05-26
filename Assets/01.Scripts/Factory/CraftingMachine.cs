@@ -6,10 +6,19 @@ using UnityEngine;
 
 public class CraftingMachine : PlacedObj
 {
-    private Dictionary<int, Item> _itemStorage = new Dictionary<int, Item>();
+    private Queue<Item> _itemStorage = new Queue<Item>();
     private int index = 0;
     private int storageLimit = 10;
-    private float makingItemTime = 0;
+    private bool isCombining = false;
+
+
+    Stack<Item> trees = new Stack<Item>();
+    Stack<Item> golds = new Stack<Item>();
+    Stack<Item> irons = new Stack<Item>();
+    Stack<Item> cores = new Stack<Item>();
+
+    public Item.eItemType combinedItemType = Item.eItemType.GOLDAXE;
+
     public bool isFull()
     {
         if (_itemStorage.Count >= storageLimit)
@@ -20,10 +29,10 @@ public class CraftingMachine : PlacedObj
     public void AddItem(Item item)
     {
         if (_itemStorage.Count >= storageLimit) return;
-        _itemStorage.Add(1, item);
+        _itemStorage.Enqueue(item);
         index++;
     }
-    private void Start()
+/*    private void Start()
     {
         Item gold = new Item();
         Item tree = new Item();
@@ -31,53 +40,73 @@ public class CraftingMachine : PlacedObj
         gold.itemType = Item.eItemType.GOLD;
         tree.itemType = Item.eItemType.TREE;
 
-        _itemStorage.Add(2, gold);
-        _itemStorage.Add(3, tree);
+        _itemStorage.Enqueue(gold);
+        _itemStorage.Enqueue(tree);
     }
-    private void Update()
-    { 
-        makingItemTime += Time.deltaTime;
-        if (makingItemTime >= 1)
-        {
-            makingItemTime = 0;
-
-            Input();
-
-            Output();
-
-        }
-    }
-    private void Input()
+*/
+    protected override void Routine()
     {
-        Item item1 = new Item();
-        Item item2 = new Item();
         foreach (var item in _itemStorage)
         {
-            if (item.Value.itemType == Item.eItemType.TREE)
+            switch (item.itemType)
             {
-                item1 = item.Value;
-            }
-            if (item.Value.itemType == Item.eItemType.GOLD)
-            {
-                item2 = item.Value;
+                case Item.eItemType.NAN:
+                    break;
+                case Item.eItemType.GOLD:
+                    golds.Push(item);
+                    break;
+                case Item.eItemType.TREE:
+                    trees.Push(item);
+                    break;
+                case Item.eItemType.IRON:
+                    irons.Push(item);
+                    break;
+                case Item.eItemType.CORE:
+                    cores.Push(item);
+                    break;
+                case Item.eItemType.STONE:
+                    break;
+                case Item.eItemType.COPPER:
+                    break;
+                case Item.eItemType.URANIUM:
+                    break;
+                case Item.eItemType.GOLDAXE:
+                    break;
+                default:
+                    break;
             }
         }
 
-        Item combinedItem = new Item();
+        CombineItem(golds,trees);
+        CombineItem(trees,trees);
+        CombineItem(golds,golds);
+        CombineItem(cores,golds);
+        CombineItem(cores,cores);
+        CombineItem(cores,trees);
 
-        if (combinedItem.CanCombine(item1.itemType, item2.itemType))
-        {
-            itemStorage.Enqueue(combinedItem);
-        }
-    }
-
-    private void Output()
-    {
         foreach (Vector2Int gridPosition in gridPositionList)
         {
+            //gridPositionList 안에 있는 gridPosition 에 있는 placedObject 
             PlacedObj placedObject = GridBuildingSystem.Instance.GetGridObj(gridPosition).GetPlacedObj();
 
+            //벨트에 올리기
             LoadBelt(placedObject);
+        }
+        isCombining = false;
+    }
+    private void CombineItem(Stack<Item> a, Stack<Item> b)
+    {
+        if (isCombining|| a.Count <=0||b.Count<=0) return;
+        Debug.Log("ssss");
+        isCombining = true;
+        Item combinedItem = new Item();
+        combinedItem.itemType = combinedItemType;
+
+        if (combinedItem.CanCombine(a.Peek().itemType,b.Peek().itemType))
+        {
+            a.Pop();
+            b.Pop();
+            itemStorage.Enqueue(combinedItem);
         }
     }
 }

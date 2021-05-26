@@ -29,17 +29,29 @@ public class PlacedObj : MonoBehaviour
     protected Grid<PlacedObj> grid;
     //그리드의 상하좌우
     protected List<Vector2Int> gridPositionList;
+    //시간
+    protected float routinTime;
 
     //저장공간 한계
     [SerializeField] protected int itemStorageLimit = 0;
     //저장공간
     protected Queue<Item> itemStorage = new Queue<Item>();
 
-    protected virtual void Setup()
+    private void Update()
     {
+        routinTime += Time.deltaTime;
+        if(routinTime >= 1)
+        {
+            routinTime = 0;
+            Routine();
+        }
+    }
+
+    protected virtual void Routine()
+    { 
 
     }
-    void Start()
+    protected virtual void Setup()
     {
         gridPositionList = placedObjType.GetGridRowColumnPositionList(new Vector2Int(origin.x, origin.y), dir);
     }

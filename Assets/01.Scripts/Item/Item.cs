@@ -16,13 +16,13 @@ public class Item : ScriptableObject
         STONE = 16,
         COPPER = 32,
         URANIUM = 64,
-        GOLDAXE = 128
+        GOLDAXE = 3
     }
     //아이템 타입
-    public eItemType itemType = eItemType.GOLD;
+    public eItemType itemType = eItemType.NAN;
 
     //합칠수 있는지 여부
-    public bool CanCombine(Item.eItemType firstItem, Item.eItemType secondItem)
+    public bool CanCombine(eItemType firstItem, eItemType secondItem)
     {
         return (int)itemType == ((int)firstItem | (int)secondItem);
     }

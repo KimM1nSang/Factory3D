@@ -44,6 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 51f6ee010b29bbf47a9b04b97226b824, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  itemStorageLimit: 1
+  nextPlacedObject: {fileID: 0}
   item: {fileID: 0}
 --- !u!1001 &2961774578878959141
 PrefabInstance:
