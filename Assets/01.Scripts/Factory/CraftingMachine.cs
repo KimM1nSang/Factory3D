@@ -97,7 +97,6 @@ public class CraftingMachine : PlacedObj
     private void CombineItem(Stack<Item> a, Stack<Item> b)
     {
         if (isCombining|| a.Count <=0||b.Count<=0) return;
-        Debug.Log("ssss");
         isCombining = true;
         Item combinedItem = new Item();
         combinedItem.itemType = combinedItemType;

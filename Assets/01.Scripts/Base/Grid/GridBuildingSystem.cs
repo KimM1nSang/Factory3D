@@ -37,6 +37,11 @@ public class GridBuildingSystem : MonoBehaviour
     //설치할 오브젝트
     private PlacedObjType placedObjType;
 
+    private Player player;
+
+    [SerializeField]  private int gridWidth = 20;
+    [SerializeField]  private int gridHeight = 20;
+    [SerializeField]  private float cellSize = 10f;
 
     //마우스 정보를 담을것
     [SerializeField] private LayerMask mouseColliderLayerMask = new LayerMask();
@@ -45,18 +50,18 @@ public class GridBuildingSystem : MonoBehaviour
     {
         Instance = this;
 
-        int gridWidth = 20;
-        int gridHeight = 20;
-        float cellSize = 10f;
+        
         
         grid = new Grid<GridObject>(gridWidth, gridHeight,cellSize, new Vector3(0, 0, 0), (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
 
         placedObjType = placedObjs[0];
+
+        player = GameObject.Find("Player").GetComponent<Player>();
     }
     
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetMouseButtonDown(0) && player.IsCamUp())
         {
             grid.GetXZ(GetMouseWorldPosition(), out int x, out int z);
 
@@ -88,7 +93,7 @@ public class GridBuildingSystem : MonoBehaviour
                 Debug.Log("Cannot Build Here!");
             }
         }
-        if(Input.GetMouseButtonDown(1))
+        if(Input.GetMouseButtonDown(1) && player.IsCamUp())
         {
             grid.GetXZ(GetMouseWorldPosition(), out int x, out int z);
 
