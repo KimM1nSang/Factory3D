@@ -32,22 +32,28 @@ public class Player : MonoBehaviour
         cam.transform.eulerAngles = camTrm.localEulerAngles;
         Cursor.lockState = CursorLockMode.Locked;
     }
-    public bool IsCamUp()
-    {
-        return isCamUp && cam.transform.position != camDownTrm.position;
-    }
+  
     void Update()
     {
         Move();
         MouseRotation();
+        CamMoveCheck();
+        CamMove();
+    }
+
+    public bool IsCamUp()
+    {
+        return isCamUp && cam.transform.position != camDownTrm.position;
+    }
+
+    private void CamMoveCheck()
+    {
         if (Input.GetKeyDown(KeyCode.Q))
         {
             isCamUp = !isCamUp;
-            camTrm = isCamUp ?  camUpTrm  : camDownTrm;
+            camTrm = isCamUp ? camUpTrm : camDownTrm;
             Cursor.lockState = isCamUp ? CursorLockMode.None : CursorLockMode.Locked;
         }
-
-        CamMove();
     }
     private void CamMove()
     {

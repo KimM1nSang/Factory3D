@@ -44,13 +44,11 @@ public class GridBuildingSystem : MonoBehaviour
     [SerializeField]  private float cellSize = 10f;
 
     //마우스 정보를 담을것
-    [SerializeField] private LayerMask mouseColliderLayerMask = new LayerMask();
+    private LayerMask mouseColliderLayerMask = new LayerMask();
 
     private void Awake()
     {
         Instance = this;
-
-        
         
         grid = new Grid<GridObject>(gridWidth, gridHeight,cellSize, new Vector3(0, 0, 0), (Grid<GridObject> g, int x, int y) => new GridObject(g, x, y));
 
@@ -61,7 +59,7 @@ public class GridBuildingSystem : MonoBehaviour
     
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0) && player.IsCamUp())
+        if (Input.GetMouseButtonDown(0) && placedObjType != null)
         {
             grid.GetXZ(GetMouseWorldPosition(), out int x, out int z);
 
@@ -77,7 +75,7 @@ public class GridBuildingSystem : MonoBehaviour
                 }
             }
 
-            if (canBuild)
+            if (canBuild && player.IsCamUp())
             {
                 PlacedObj placedObject = PlacedObj.Create(GetPlaceObjectWorldPosition(x, z), new Vector2Int(x, z), dir, placedObjType);
 
@@ -88,22 +86,23 @@ public class GridBuildingSystem : MonoBehaviour
                     //Debug.Log(gridPosition);
                 }
             }
-            else
+            else if(!canBuild && !player.IsCamUp())
+            {
+                foreach (Vector2Int gridPosition in gridPositionList)
+                {
+                    var placedObj = grid.GetGridObj(gridPosition.x, gridPosition.y).PlacedObj;
+                    if (placedObj is ConveyorBelt)
+                    {
+
+                    }
+                }
+            }
+            else if (!canBuild)
             {
                 Debug.Log("Cannot Build Here!");
             }
         }
-        if(Input.GetMouseButtonDown(1) && player.IsCamUp())
-        {
-            grid.GetXZ(GetMouseWorldPosition(), out int x, out int z);
-
-            List<Vector2Int> gridPositionList = placedObjType.GetGridPositionList(new Vector2Int(x, z), dir);
-
-            foreach (Vector2Int gridPosition in gridPositionList)
-            {
-                grid.GetGridObj(gridPosition.x, gridPosition.y).RemovePlacedObject();
-            }
-        }
+        
         if (Input.GetKeyDown(KeyCode.R)) { dir = PlacedObjType.GetNextDir(dir); }
 
         if (Input.GetKeyDown(KeyCode.Alpha1)) placedObjType = placedObjs[0];
@@ -113,6 +112,27 @@ public class GridBuildingSystem : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha5)) placedObjType = placedObjs[4];
         if (Input.GetKeyDown(KeyCode.Alpha6)) placedObjType = placedObjs[5];
         if (Input.GetKeyDown(KeyCode.Alpha7)) placedObjType = placedObjs[6];
+
+        if (Input.GetKeyDown(KeyCode.Alpha0)) DeselectPlacedObj();
+        if (Input.GetMouseButtonDown(1) && player.IsCamUp() && placedObjType != null)
+        {
+            Vector3 mousePosition = GetMouseWorldPosition();
+            PlacedObj placedObj = grid.GetGridObj(mousePosition).GetPlacedObj();
+            if (placedObj != null)
+            {
+                placedObj.DestroySelf();
+
+                List<Vector2Int> gridPositionList = placedObj.GetGridPositionList();
+                foreach (Vector2Int gridPosition in gridPositionList)
+                {
+                    grid.GetGridObj(gridPosition.x, gridPosition.y).RemovePlacedObject();
+                }
+            }
+        }
+    }
+    private void DeselectPlacedObj()
+    {
+        placedObjType = null;
     }
     public GridObject GetGridObj(Vector2Int gridPosition)
     {

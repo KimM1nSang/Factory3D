@@ -70,4 +70,12 @@ public class PlacedObj : MonoBehaviour
             }
         }
     }
+    public List<Vector2Int> GetGridPositionList()
+    {
+        return placedObjType.GetGridPositionList(origin, dir);
+    }
+    public void DestroySelf()
+    {
+        Destroy(gameObject);
+    }
 }
