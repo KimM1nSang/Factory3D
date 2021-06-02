@@ -93,7 +93,7 @@ public class PlacedObjType : ScriptableObject
                 
                 for (int i = 0; i < (width*2) * (height * 2); i++)
                 {
-                    gridRowColumnPositionList.Add(offset + new Vector2Int(dx[i], dy[i]));
+                    gridRowColumnPositionList.Add(offset + new Vector2Int(dx[i % 4], dy[i % 4]));
                 }
 
                 break;
@@ -101,7 +101,7 @@ public class PlacedObjType : ScriptableObject
             case Dir.RIGHT:
                 for (int i = 0; i < (width * 2) * (height * 2); i++)
                 {
-                    gridRowColumnPositionList.Add(offset + new Vector2Int(dy[i], dx[i]));
+                    gridRowColumnPositionList.Add(offset + new Vector2Int(dy[i % 4], dx[i % 4]));
                 }
                 break;
         }

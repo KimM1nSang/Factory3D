@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectName: CraftingMachine
   prefab: {fileID: 5748589200595222357, guid: 196b074d2d9cd1243b4f91b98923b40b, type: 3}
-  width: 1
-  height: 1
+  width: 3
+  height: 3

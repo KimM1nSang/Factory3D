@@ -44,7 +44,7 @@ public class GridBuildingSystem : MonoBehaviour
     [SerializeField]  private float cellSize = 10f;
 
     //마우스 정보를 담을것
-    private LayerMask mouseColliderLayerMask = new LayerMask();
+    [SerializeField] private LayerMask mouseColliderLayerMask = new LayerMask();
 
     private void Awake()
     {
@@ -93,7 +93,7 @@ public class GridBuildingSystem : MonoBehaviour
                     var placedObj = grid.GetGridObj(gridPosition.x, gridPosition.y).PlacedObj;
                     if (placedObj is ConveyorBelt)
                     {
-
+                        Debug.Log("상호작용");
                     }
                 }
             }
